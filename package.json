@@ -1,0 +1,38 @@
+{
+  "name": "micro-service-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "dev": "nodemon src/index.ts --exec ts-node",
+    "build": "tsc && node ./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crewdevio/micro-service-node.git"
+  },
+  "keywords": [],
+  "author": "crewdevio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crewdevio/micro-service-node/issues"
+  },
+  "homepage": "https://github.com/crewdevio/micro-service-node#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
+    "typescript": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.7",
+    "@types/mongoose": "^5.7.36",
+    "@types/morgan": "^1.9.1",
+    "@types/node": "^14.6.2",
+    "ts-node": "^9.0.0"
+  }
+}
