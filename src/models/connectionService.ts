@@ -1,6 +1,6 @@
 import { model, Schema, Document } from "mongoose";
-// import bcrypt from "bcrypt";
-export interface IconnectionService extends Document {
+
+export interface ConnectionService extends Document {
   ip: string;
   ServiceName: string;
   description?: string;
@@ -28,29 +28,7 @@ const connectionServiceSchema = new Schema({
     required: true,
   },
 });
-
-// TODO(buttercubz) create a encrypt data
-
-// packageSchema.pre<IpackageSchema>("save", async function (next: Function) {
-//   if (!this.isModified("name")) {
-//     return next();
-//   }
-
-//   const salt = await bcrypt.genSalt(30);
-//   const hash = await bcrypt.hash(this.name + this.author, salt);
-
-//   this.name = hash;
-//   next();
-// });
-
-// packageSchema.methods.findUser = async function (
-//   authorID: string,
-//   name: string
-// ): Promise<boolean> {
-//   return await bcrypt.compare(name + authorID, this.name);
-// };
-
-export default model<IconnectionService>(
+export default model<ConnectionService>(
   "ConnectionService",
   connectionServiceSchema
 );

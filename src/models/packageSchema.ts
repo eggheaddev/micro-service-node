@@ -1,14 +1,10 @@
 import { model, Schema, Document } from "mongoose";
-import bcrytp from "bcrypt";
-export interface IpackageSchema extends Document {
+import bcrypt from "bcrypt";
+export interface PackageSchema extends Document {
   author: string;
-
   name: string;
-
   description?: string;
-
   created_at: string;
-
   files: {
     [key: string]: {
       type: string;
@@ -44,13 +40,13 @@ const packageSchema = new Schema({
   },
 });
 
-packageSchema.pre<IpackageSchema>("save", async function (next: Function) {
+packageSchema.pre<PackageSchema>("save", async function (next: Function) {
   if (!this.isModified("name")) {
     return next();
   }
 
-  const salt = await bcrytp.genSalt(30);
-  const hash = await bcrytp.hash(this.name + this.author, salt);
+  const salt = await bcrypt.genSalt(30);
+  const hash = await bcrypt.hash(this.name + this.author, salt);
 
   this.name = hash;
   next();
@@ -60,7 +56,7 @@ packageSchema.methods.findUser = async function (
   authorID: string,
   name: string
 ): Promise<boolean> {
-  return await bcrytp.compare(name + authorID, this.name);
+  return await bcrypt.compare(name + authorID, this.name);
 };
 
-export default model<IpackageSchema>("UserPackage", packageSchema);
+export default model<PackageSchema>("UserPackage", packageSchema);
