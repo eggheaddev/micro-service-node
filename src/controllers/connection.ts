@@ -40,12 +40,16 @@ async function signup(request: Request, response: Response) {
 
   const newService = new Service({
     ...request.body,
-    created_at: new Date().toUTCString(),
+    created_at: new Date().toUTCString()
   });
 
   const token = JwtSign(ServiceName, ip);
 
-  await newService.save();
+  try {
+    await newService.save();
+  } catch(err) {
+    console.log(err)
+  }
 
   response.cookie("access_token", token, { httpOnly: true, sameSite: true });
   response.status(200);
@@ -55,6 +59,8 @@ async function signup(request: Request, response: Response) {
     accessToken: true,
     ID: newService._id,
     created_at: newService.created_at,
+    msg: "user created",
+    error: false
   });
 }
 

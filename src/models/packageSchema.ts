@@ -1,7 +1,8 @@
 import { model, Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 export interface PackageSchema extends Document {
-  author: string;
+  author_id: string;
+  owner: string;
   name: string;
   description?: string;
   created_at: string;
@@ -15,10 +16,13 @@ export interface PackageSchema extends Document {
 }
 
 const packageSchema = new Schema({
-  author: {
-    type: Number,
-    unique: true,
+  author_id: {
+    type: String,
     required: true,
+  },
+  owner: {
+    type: String,
+    required: true
   },
   name: {
     type: String,
@@ -40,23 +44,23 @@ const packageSchema = new Schema({
   },
 });
 
-packageSchema.pre<PackageSchema>("save", async function (next: Function) {
-  if (!this.isModified("name")) {
-    return next();
-  }
+// packageSchema.pre<PackageSchema>("save", async function (next: Function) {
+//   if (!this.isModified("name")) {
+//     return next();
+//   }
 
-  const salt = await bcrypt.genSalt(30);
-  const hash = await bcrypt.hash(this.name + this.author, salt);
+//   const salt = await bcrypt.genSalt(30);
+//   const hash = await bcrypt.hash(this.name + this.author, salt);
 
-  this.name = hash;
-  next();
-});
+//   this.name = hash;
+//   next();
+// });
 
-packageSchema.methods.findUser = async function (
-  authorID: string,
-  name: string
-): Promise<boolean> {
-  return await bcrypt.compare(name + authorID, this.name);
-};
+// packageSchema.methods.findUser = async function (
+//   authorID: string,
+//   name: string
+// ): Promise<boolean> {
+//   return await bcrypt.compare(name + authorID, this.name);
+// };
 
 export default model<PackageSchema>("UserPackage", packageSchema);
