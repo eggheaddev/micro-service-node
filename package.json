@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "dev": "nodemon src/index.ts --exec ts-node",
-    "build": "tsc && node ./dist/index.js"
+    "postinstall": "npm run build",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts --exec ts-node"
   },
   "repository": {
     "type": "git",
