@@ -1,6 +1,4 @@
 import { Router } from "express";
-import { verifyToken } from "../middlewares/accessVerification";
-import { signup, getUser } from "../controllers/connection";
 import {
   getPackages,
   getOnePackage,
@@ -10,10 +8,6 @@ import {
 } from "../controllers/package";
 
 const route = Router();
-
-// * register into the service
-route.post("/connect", signup);
-route.get("/user", verifyToken, getUser);
 
 // Packages
 route.get("/packages", getPackages);
