@@ -1,14 +1,16 @@
 import Service from "../models/connectionService";
 import passportJwt from "passport-jwt";
 import passport from "passport";
+import { Request } from "express"
 
 const JwtStrategy = passportJwt.Strategy;
-const ExtractJwt = passportJwt.ExtractJwt;
+const ExtractJwt = (request: Request) =>
+  request.cookies ? request.cookies["access_token"] : null
 
 passport.use(
   new JwtStrategy(
     {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt,
       secretOrKey: process.env.SECRET_JWT!,
     },
     async function (payload, done) {
