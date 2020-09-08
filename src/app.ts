@@ -1,10 +1,8 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import cookieParser from "cookie-parser"
-import passport from "passport"
-import connectRouter from "./routes/connect";
-import packageRouter from "./routes/package"
+import cookieParser from "cookie-parser";
+import router from "./routes/router";
 
 import "./database/database";
 
@@ -18,7 +16,6 @@ app.use(morgan("dev"));
 app.use(cors());
 
 // * setup routes
-app.use(connectRouter);
-app.use("/", passport.authenticate("jwt", { session: false }), packageRouter)
+app.use(router);
 
 export default app;

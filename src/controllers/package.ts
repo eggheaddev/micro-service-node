@@ -20,10 +20,14 @@ async function getPackages(request: Request, response: Response) {
 }
 
 async function getOnePackage(request: Request, response: Response) {
-  const onePackage = await Package.findOne({ _id: request.params.id });
+  const onePackage = await Package.findOne({ package_id: request.params.id });
 
-  if (!onePackage)
-    return response.json({ Package: onePackage, msg: "package not found", error: true }).status(400)
+  if (!onePackage) {
+    response
+    .json({ Package: onePackage, msg: "package not found", error: true })
+    .status(400);
+    return;
+  }
 
   response
     .json({ Packages: onePackage, msg: "package found", error: false })

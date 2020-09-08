@@ -55,7 +55,6 @@ async function signup(request: Request, response: Response) {
   response.status(200);
   response.json({
     created: true,
-    Service: newService,
     accessToken: true,
     ID: newService._id,
     created_at: newService.created_at,
@@ -65,24 +64,24 @@ async function signup(request: Request, response: Response) {
 }
 
 // non-production controllers? <
-async function checkAuth(request: Request, response: Response) {
-  const { ServiceName } = JSON.parse(JSON.stringify(request.user));
+// async function checkAuth(request: Request, response: Response) {
+//   const { ServiceName } = JSON.parse(JSON.stringify(request.user));
 
-  response.json({ service: ServiceName, isAuthenticated: true }).status(200);
-}
+//   response.json({ service: ServiceName, isAuthenticated: true }).status(200);
+// }
 
-async function getService(request: Request, response: Response) {
-  const service = await Service.findOne({
-    ServiceName: request.body.ServiceName,
-  });
+// async function getService(request: Request, response: Response) {
+//   const service = await Service.findOne({
+//     ServiceName: request.body.ServiceName,
+//   });
 
-  if (!service)
-    return response.json({ msg: "service not found", error: true }).status(400);
+//   if (!service)
+//     return response.json({ msg: "service not found", error: true }).status(400);
 
-  response
-    .json({ service: service, msg: "service found", error: false })
-    .status(200);
-}
+//   response
+//     .json({ service: service, msg: "service found", error: false })
+//     .status(200);
+// }
 
 async function removeService(request: Request, response: Response) {
   try {
@@ -102,10 +101,9 @@ async function removeService(request: Request, response: Response) {
   } catch (err) {
     console.log(err);
     response
-      .json({ msg: "unknow error by removing service", error: true })
+      .json({ msg: "unknown error by removing service", error: true })
       .status(500);
   }
 }
-// />
 
-export { signup, checkAuth, getService, removeService };
+export { signup, removeService };

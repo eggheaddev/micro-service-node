@@ -1,6 +1,7 @@
 import { model, Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 export interface PackageSchema extends Document {
+  package_id: string;
   author_id: string;
   owner: string;
   name: string;
@@ -16,13 +17,17 @@ export interface PackageSchema extends Document {
 }
 
 const packageSchema = new Schema({
+  package_id: {
+    type: String,
+    required: true,
+  },
   author_id: {
     type: String,
     required: true,
   },
   owner: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
     type: String,
