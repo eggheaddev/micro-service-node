@@ -1,28 +1,28 @@
 import { model, Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 export interface PackageSchema extends Document {
+  package_id: string;
   author_id: string;
-  owner: string;
   name: string;
   description?: string;
   created_at: string;
   files: {
     [key: string]: {
+      name: string;
       type: string;
-      hash: string;
       path: string;
     };
   };
 }
 
 const packageSchema = new Schema({
-  author_id: {
+  package_id: {
     type: String,
     required: true,
   },
-  owner: {
+  author_id: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
     type: String,
