@@ -16,9 +16,9 @@ route.post("/remove_service", verifyToken, removeService);
 
 // Packages
 route.get("/packages", verifyToken, getPackages);
-route.get("/package/:id", verifyToken ,getOnePackage);
-route.post("/package", verifyToken ,submitPackage);
-route.put("/package/:id", verifyToken ,editPackage);
-route.delete("/package/:id", verifyToken ,removePackage);
+route.get("/package/:id", verifyToken, getOnePackage);
+route.post("/package", verifyToken, submitPackage);
+route.put("/package/:id", verifyToken, editPackage);
+route.delete("/package/:id", verifyToken, removePackage);
 
 export default route;
