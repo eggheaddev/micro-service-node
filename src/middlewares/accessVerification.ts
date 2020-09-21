@@ -10,7 +10,7 @@ async function verifyToken(
   const data = getDataService(request);
 
   if (!existToken(request)) {
-    response.status(500);
+    response.status(401);
     response.json({
       error: true,
       msg: "you have to send the access token",
@@ -19,7 +19,7 @@ async function verifyToken(
   }
 
   if (data?.err) {
-    response.status(500);
+    response.status(401);
     response.json({
       error: true,
       msg: "the token received is invalid",
@@ -31,7 +31,7 @@ async function verifyToken(
   const queryServiceName = await Service.findOne({ ServiceName: data.name });
 
   if (!(queryIp && queryServiceName)) {
-    response.status(500);
+    response.status(404);
     response.json({
       error: true,
       msg: "your service was not found in the database",
