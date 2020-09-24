@@ -5,6 +5,7 @@ export interface ConnectionService extends Document {
   ServiceName: string;
   description?: string;
   created_at: string;
+  endPoint: string;
 }
 
 const connectionServiceSchema = new Schema({
@@ -24,6 +25,10 @@ const connectionServiceSchema = new Schema({
     trim: true,
   },
   created_at: {
+    type: String,
+    required: true,
+  },
+  endPoint: {
     type: String,
     required: true,
   },

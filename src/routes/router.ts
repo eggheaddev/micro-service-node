@@ -6,18 +6,20 @@ import {
   editPackage,
   removePackage,
 } from "../controllers/package";
-import { removeService, signup } from "../controllers/connection";
+import { Disconnect, Connect } from "../controllers/connection";
 import { verifyToken } from "../middlewares/accessVerification";
+import { notifyObservers } from "../middlewares/notifyObservers";
 
 const route = Router();
 
-route.post("/connect", signup);
-route.post("/remove_service", verifyToken, removeService);
+// * paths for registering and deleting services
+route.post("/api/service/connect", Connect);
+route.post("/api/service/disconnect", verifyToken, Disconnect);
 
 // Packages
-route.get("/packages", verifyToken, getPackages);
+route.get("/packages", getPackages);
 route.get("/package/:id", verifyToken, getOnePackage);
-route.post("/package", verifyToken, submitPackage);
+route.post("/package", verifyToken, notifyObservers, submitPackage); //verifyToken,
 route.put("/package/:id", verifyToken, editPackage);
 route.delete("/package/:id", verifyToken, removePackage);
 
