@@ -13,28 +13,27 @@ function JwtSign(serviceName: string, serviceIP: string) {
   );
 }
 
-async function signup(request: Request, response: Response) {
-  const { ServiceName, ip, description } = request.body;
+async function Connect(request: Request, response: Response) {
+  const { ServiceName, ip, description, endPoint } = request.body;
   const ipQuery = await Service.findOne({ ip });
   const serviceQuery = await Service.findOne({ ServiceName });
 
-  if (!(ip && ServiceName && description)) {
-    response.status(500);
+  if (!(ip && ServiceName && description && endPoint)) {
+    response.status(400);
     response.json({
       error: true,
-      msg: "all fields are required, ip, service Name, Service Description",
+      msg:
+        "all fields are required, ip, service Name, Service Description, endPoint",
     });
     return;
   }
 
   if (ipQuery || serviceQuery) {
-    response
-      .json({
-        error: true,
-        msg:
-          "there is already a service with the same ServiceName or ip address",
-      })
-      .status(500);
+    response.status(409);
+    response.json({
+      error: true,
+      msg: "there is already a service with the same ServiceName or ip address",
+    });
     return;
   }
 
@@ -61,49 +60,31 @@ async function signup(request: Request, response: Response) {
     msg: "user created",
     error: false,
   });
+  return;
 }
 
-// non-production controllers? <
-// async function checkAuth(request: Request, response: Response) {
-//   const { ServiceName } = JSON.parse(JSON.stringify(request.user));
-
-//   response.json({ service: ServiceName, isAuthenticated: true }).status(200);
-// }
-
-// async function getService(request: Request, response: Response) {
-//   const service = await Service.findOne({
-//     ServiceName: request.body.ServiceName,
-//   });
-
-//   if (!service)
-//     return response.json({ msg: "service not found", error: true }).status(400);
-
-//   response
-//     .json({ service: service, msg: "service found", error: false })
-//     .status(200);
-// }
-
-async function removeService(request: Request, response: Response) {
+async function Disconnect(request: Request, response: Response) {
   try {
     const service = await Service.findOneAndDelete({
-      ServiceName: request.body.ServiceName,
+      ServiceName: request.body?.ServiceName,
     });
 
-    if (!service)
-      return response
-        .json({ msg: "service not found", error: true })
-        .status(400);
+    if (!service) {
+      response.status(404);
+      response.json({ msg: "service not found", error: true });
+      return;
+    }
 
-    response
-      .json({ msg: "service removed", error: false })
-      .clearCookie("access_token")
-      .status(200);
+    response.status(200);
+    response.clearCookie("access_token");
+    response.json({ msg: "service removed", error: false });
+    return;
   } catch (err) {
     console.log(err);
-    response
-      .json({ msg: "unknown error by removing service", error: true })
-      .status(500);
+    response.status(500);
+    response.json({ msg: "unknown error by removing service", error: true });
+    return;
   }
 }
 
-export { signup, removeService };
+export { Connect, Disconnect };
