@@ -1,7 +1,7 @@
 import Service from "../models/connectionService";
 import passportJwt from "passport-jwt";
-import passport from "passport";
 import { Request } from "express"
+import passport from "passport";
 
 const JwtStrategy = passportJwt.Strategy;
 const ExtractJwt = (request: Request) =>

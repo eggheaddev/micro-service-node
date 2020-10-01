@@ -8,31 +8,37 @@ export interface ConnectionService extends Document {
   endPoint: string;
 }
 
-const connectionServiceSchema = new Schema({
-  ip: {
-    type: String,
-    unique: true,
-    required: true,
+const connectionServiceSchema = new Schema(
+  {
+    ip: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    ServiceName: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    created_at: {
+      type: String,
+      required: true,
+    },
+    endPoint: {
+      type: String,
+      required: true,
+    },
   },
-  ServiceName: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-  },
-  description: {
-    type: String,
-    trim: true,
-  },
-  created_at: {
-    type: String,
-    required: true,
-  },
-  endPoint: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    versionKey: false,
+    validateBeforeSave: true,
+  }
+);
 export default model<ConnectionService>(
   "ConnectionService",
   connectionServiceSchema

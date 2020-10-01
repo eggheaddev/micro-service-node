@@ -1,66 +1,100 @@
 import { model, Schema, Document } from "mongoose";
-import bcrypt from "bcrypt";
+import Service from "./connectionService";
+import Axios from "axios";
+
 export interface PackageSchema extends Document {
-  package_id: string;
-  author_id: string;
+  author: string;
   name: string;
+  entry: string;
   description?: string;
   created_at: string;
-  files: {
-    [key: string]: {
-      name: string;
-      type: string;
-      path: string;
-    };
-  };
+  repository?: string;
+  storage_path: string;
+  versions: string[];
 }
 
-const packageSchema = new Schema({
-  package_id: {
-    type: String,
-    required: true,
+const packageSchema = new Schema(
+  {
+    author: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
+    entry: {
+      type: String,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    created_at: {
+      type: String,
+      required: true,
+    },
+    repository: {
+      type: String,
+    },
+    storage_path: {
+      type: String,
+      required: true,
+    },
+    versions: {
+      type: Array,
+      required: true,
+    },
   },
-  author_id: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-    unique: true,
-  },
-  description: {
-    type: String,
-    trim: true,
-  },
-  created_at: {
-    type: String,
-    required: true,
-  },
-  files: {
-    type: Object,
-    required: true,
-  },
+  {
+    versionKey: false,
+    validateBeforeSave: true,
+  }
+);
+
+// * notify observers services
+packageSchema.pre<PackageSchema>("save", async function (next: Function) {
+  const services = await Service.find();
+
+  const owner = this.author;
+  const packageName = this.name;
+  const description = this.description ?? "no description";
+  const createdAt = this.created_at;
+  const storagePath = this.storage_path;
+  const repository = this.repository ?? "no repository";
+  const versions = this.versions;
+  const entry = this.entry;
+
+  for (const service of services) {
+    try {
+      await Axios.post(
+        service.endPoint,
+        {
+          package_name: packageName,
+          owner,
+          entry,
+          description,
+          repository,
+          versions,
+          storage_path: storagePath,
+          created_at: createdAt,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+  }
+
+  next();
 });
 
-// packageSchema.pre<PackageSchema>("save", async function (next: Function) {
-//   if (!this.isModified("name")) {
-//     return next();
-//   }
-
-//   const salt = await bcrypt.genSalt(30);
-//   const hash = await bcrypt.hash(this.name + this.author, salt);
-
-//   this.name = hash;
-//   next();
-// });
-
-// packageSchema.methods.findUser = async function (
-//   authorID: string,
-//   name: string
-// ): Promise<boolean> {
-//   return await bcrypt.compare(name + authorID, this.name);
-// };
-
-export default model<PackageSchema>("UserPackage", packageSchema);
+export default model<PackageSchema>("Packages", packageSchema);

@@ -1,14 +1,9 @@
-import { Router } from "express";
-import {
-  getPackages,
-  getOnePackage,
-  submitPackage,
-  editPackage,
-  removePackage,
-} from "../controllers/package";
+import { getPackages, getOnePackage } from "../controllers/package";
+import { Upload, uploadMiddleware } from "../controllers/uploadFiles";
 import { Disconnect, Connect } from "../controllers/connection";
 import { verifyToken } from "../middlewares/accessVerification";
-import { notifyObservers } from "../middlewares/notifyObservers";
+import { existVersion } from "../middlewares/existVersion";
+import { Router } from "express";
 
 const route = Router();
 
@@ -16,11 +11,11 @@ const route = Router();
 route.post("/api/service/connect", Connect);
 route.post("/api/service/disconnect", verifyToken, Disconnect);
 
-// Packages
-route.get("/packages", getPackages);
-route.get("/package/:id", verifyToken, getOnePackage);
-route.post("/package", verifyToken, notifyObservers, submitPackage); //verifyToken,
-route.put("/package/:id", verifyToken, editPackage);
-route.delete("/package/:id", verifyToken, removePackage);
+// * cli upload endpoint
+route.post("/api/upload", existVersion, uploadMiddleware.any(), Upload);
+
+// * get packages
+route.get("/api/packages", verifyToken, getPackages);
+route.get("/api/package", verifyToken, getOnePackage);
 
 export default route;

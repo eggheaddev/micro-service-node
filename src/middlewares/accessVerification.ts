@@ -13,7 +13,7 @@ async function verifyToken(
     response.status(401);
     response.json({
       error: true,
-      msg: "you have to send the access token",
+      message: "you have to send the access token",
     });
     return;
   }
@@ -22,7 +22,7 @@ async function verifyToken(
     response.status(401);
     response.json({
       error: true,
-      msg: "the token received is invalid",
+      message: "the token received is invalid",
     });
     return;
   }
@@ -34,7 +34,7 @@ async function verifyToken(
     response.status(404);
     response.json({
       error: true,
-      msg: "your service was not found in the database",
+      message: "your service was not found in the database",
     });
     return;
   }

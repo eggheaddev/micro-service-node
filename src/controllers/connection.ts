@@ -22,7 +22,7 @@ async function Connect(request: Request, response: Response) {
     response.status(400);
     response.json({
       error: true,
-      msg:
+      message:
         "all fields are required, ip, service Name, Service Description, endPoint",
     });
     return;
@@ -32,7 +32,8 @@ async function Connect(request: Request, response: Response) {
     response.status(409);
     response.json({
       error: true,
-      msg: "there is already a service with the same ServiceName or ip address",
+      message:
+        "there is already a service with the same ServiceName or ip address",
     });
     return;
   }
@@ -57,7 +58,7 @@ async function Connect(request: Request, response: Response) {
     accessToken: true,
     ID: newService._id,
     created_at: newService.created_at,
-    msg: "user created",
+    message: "user created",
     error: false,
   });
   return;
@@ -71,18 +72,21 @@ async function Disconnect(request: Request, response: Response) {
 
     if (!service) {
       response.status(404);
-      response.json({ msg: "service not found", error: true });
+      response.json({ message: "service not found", error: true });
       return;
     }
 
     response.status(200);
     response.clearCookie("access_token");
-    response.json({ msg: "service removed", error: false });
+    response.json({ message: "service removed", error: false });
     return;
   } catch (err) {
     console.log(err);
     response.status(500);
-    response.json({ msg: "unknown error by removing service", error: true });
+    response.json({
+      message: "unknown error by removing service",
+      error: true,
+    });
     return;
   }
 }
