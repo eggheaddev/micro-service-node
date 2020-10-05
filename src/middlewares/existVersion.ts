@@ -11,10 +11,21 @@ export async function existVersion(
     const name = request.headers["package-name"] as string;
     const author = request.headers["owner-name"] as string;
 
+    const existPackage = await Packages.findOne({ name });
     const Package = await Packages.findOne({ name, author });
-    const exist = Package?.versions.includes(version);
+    const exist_version = Package?.versions.includes(version);
 
-    if (exist) {
+    if (existPackage && existPackage?.author !== author) {
+      response.status(500);
+      response.json({
+        error: true,
+        message:
+          "the package you are trying to load already exists and you do not own it",
+      });
+      return;
+    }
+
+    if (exist_version) {
       response.status(500);
       response.json({
         error: true,

@@ -18,4 +18,18 @@ route.post("/api/upload", existVersion, uploadMiddleware.any(), Upload);
 route.get("/api/packages", verifyToken, getPackages);
 route.get("/api/package", verifyToken, getOnePackage);
 
+// * not found resource handler
+route.use(verifyToken, (request, response, next) => {
+  if (!request.route) {
+    response.status(404);
+    response.json({
+      error: true,
+      message: "this path or resource was not found",
+    });
+    return;
+  }
+
+  next();
+});
+
 export default route;
